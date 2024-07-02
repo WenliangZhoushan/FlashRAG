@@ -141,10 +141,9 @@ class OpenaiGenerator:
         scores = []
         response_text =[]
         for res in tqdm(result, total=len(result), desc='Parsing: '):
-            raw_text = res
-            if raw_text is None:
-                raw_text = "None"
-            response_text.append(raw_text)
+            if res is None:
+                res = "none"
+            response_text.append(res)
             if return_scores:
                 score = np.exp(list(map(lambda x: x.logprob, res.logprobs.content)))
                 scores.append(score)
