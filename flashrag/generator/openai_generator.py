@@ -69,12 +69,18 @@ class OpenaiGenerator:
         self.tokenizer = tiktoken.encoding_for_model(self.model)
 
     def get_response(self, input: List, **params):
-        response = self.client.chat.completions.create(
-            model = self.model,
-            messages=input,
-            **params
-        )
-        return response.choices[0]
+        try:
+            response = self.client.chat.completions.create(
+                model = self.model,
+                messages=input,
+                **params
+            )
+            response = response.choices[0].message.content
+        except Exception as e:
+            print(f'Error: {e}')
+            response = 'None'
+        
+        return response
 
     '''asynchronous not supported for azureopenai'''
     # async def get_response(self, input: List, **params):
@@ -96,8 +102,11 @@ class OpenaiGenerator:
     #     return all_result
     
     def get_batch_response(self, input_list:List[List], batch_size, **params):
-        all_result = [self.get_response(input, **params) for input in input_list]
-
+        # all_result = [self.get_response(input, **params) for input in input_list]
+        all_result = []
+        for input in tqdm(input_list, total=len(input_list), desc=f'{self.model.upper()} generation process: '):
+            all_result.append(self.get_response(input, **params))
+        
         return all_result
 
     def generate(self, input_list: List[List], batch_size=None, return_scores=False, **params) -> List[str]:
@@ -131,8 +140,11 @@ class OpenaiGenerator:
         # parse result into response text and logprob
         scores = []
         response_text =[]
-        for res in result:
-            response_text.append(res.message.content)
+        for res in tqdm(result, total=len(result), desc='Parsing: '):
+            raw_text = res
+            if raw_text is None:
+                raw_text = "None"
+            response_text.append(raw_text)
             if return_scores:
                 score = np.exp(list(map(lambda x: x.logprob, res.logprobs.content)))
                 scores.append(score)
