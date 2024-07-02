@@ -10,16 +10,18 @@ parser.add_argument('--retriever_path', type=str)
 args = parser.parse_args()
 
 config_dict = {
+                'env_path': '/home/v-wenlzheng/FlashRAG/env_configs/.env',
                 'data_dir': 'dataset/',
                 'index_path': 'indexes/e5_Flat.index',
                 'corpus_path': 'indexes/general_knowledge.jsonl',
-                'faiss_gpu': True,
-                'model2path': {'e5': 'intfloat/e5-base-v2', 'llama3-8B-instruct': 'meta-llama/Meta-Llama-3-8B-Instruct'},
-                'generator_model': 'llama3-8B-instruct',
-                'framework': 'vllm',
+                'model2path': {'e5': 'intfloat/e5-base-v2'},
+                # 'generator_model': 'gpt-35-turbo',
+                'generator_model': 'gpt-4',
+                'generation_params': {'temperature': 0},
+                'framework': 'openai',
                 'retrieval_method': 'e5',
-                'metrics': ['em','f1','sub_em'],
-                'retrieval_topk': 10,
+                'metrics': ['em','f1'],
+                'retrieval_topk': 1,
                 'save_intermediate_data': True
             }
 
