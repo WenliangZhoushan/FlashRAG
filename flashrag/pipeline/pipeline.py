@@ -80,7 +80,13 @@ class SequentialPipeline(BasicPipeline):
     def run(self, dataset, do_eval=True, pred_process_fun=None):
         input_query = dataset.question
 
+        import time
+        start_time = time.time()
+        
         retrieval_results = self.retriever.batch_search(input_query)
+
+        self.config["retrieval_time"] = time.time() - start_time
+
         dataset.update_output('retrieval_result', retrieval_results)
 
         if self.refiner:

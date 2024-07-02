@@ -3,3 +3,6 @@
 *.egg-info
 build/
 .idea/
+*.env
+data/
+reproduce/

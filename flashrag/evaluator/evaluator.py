@@ -70,9 +70,10 @@ class Evaluator:
     def save_metric_score(self, result_dict):
         file_name = "metric_score.txt"
         save_path = os.path.join(self.save_dir, file_name)
-        with open(save_path, "w", encoding='utf-8') as f:
+        with open(save_path, "a", encoding='utf-8') as f:
             for k,v in result_dict.items():
                 f.write(f"{k}: {v}\n")
+            f.write("\n")
 
 
     def save_data(self, data):
