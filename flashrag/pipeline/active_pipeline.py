@@ -703,7 +703,7 @@ class SelfAskPipeline(BasicPipeline):
 
     def format_reference(self, retrieval_result):
         format_reference = ''
-        for idx, doc_item in enumerate(retrieval_result):
+        for idx, doc_item in enumerate(retrieval_result[0]):
             content = doc_item['contents']
             title = content.split("\n")[0]
             text = "\n".join(content.split("\n")[1:])
